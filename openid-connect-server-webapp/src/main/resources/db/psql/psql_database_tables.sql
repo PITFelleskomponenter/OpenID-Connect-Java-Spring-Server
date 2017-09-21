@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS user_info (
 	locale VARCHAR(256),
 	phone_number VARCHAR(256),
 	phone_number_verified BOOLEAN,
-	address_id VARCHAR(256),
+	address_id BIGSERIAL, -- var VARCHAR(256)
 	updated_time VARCHAR(256),
 	birthdate VARCHAR(256),
 	src VARCHAR(4096)

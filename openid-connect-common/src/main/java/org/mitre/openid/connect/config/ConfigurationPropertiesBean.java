@@ -79,10 +79,10 @@ public class ConfigurationPropertiesBean {
 	 */
 	@PostConstruct
 	public void checkConfigConsistency() {
-		if (!StringUtils.startsWithIgnoreCase(issuer, "https")) {
+		if (!StringUtils.startsWithIgnoreCase(getIssuer(), "https")) {
 			if (this.forceHttps) {
 				logger.error("Configured issuer url is not using https scheme. Server will be shut down!");
-				throw new BeanCreationException("Issuer is not using https scheme as required: " + issuer);
+				throw new BeanCreationException("Issuer is not using https scheme as required: " + getIssuer());
 			}
 			else {
 				logger.warn("\n\n**\n** WARNING: Configured issuer url is not using https scheme.\n**\n\n");
@@ -98,6 +98,16 @@ public class ConfigurationPropertiesBean {
 	 * @return the issuer baseUrl
 	 */
 	public String getIssuer() {
+		// Get issuer from ENV if not set in order to adopt to Docker-config
+		if (issuer==null){
+			// Try to resolve this from an ENV variable in order to be able to configure this
+			// runtime for Dockercontainers
+			issuer=System.getenv("ISSUER");
+			if (issuer==null){
+				issuer="http://localhost:8080/openid-connect-server-webapp/"; // Last resort
+			}
+
+		}
 		return issuer;
 	}
 
